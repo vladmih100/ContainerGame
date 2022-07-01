@@ -1,5 +1,6 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <conio.h>
+#define _CRT_SECURE_NO_WARNINGS
 
 #define NUM_ROWS 8
 #define NUM_COLS 8
@@ -9,11 +10,6 @@
 #define ENTRY -2
 #define EXIT -3
 
-
-/***********************************************************/
-/******* ADD THE REQUIRED FUNCTIONS BELOW THIS POINT *******/
-/***********************************************************/
-/***********************************************************/
 
 /*
 Uses integers to initialise floor format
@@ -76,7 +72,7 @@ void PrintFloor(int floor[NUM_ROWS][NUM_COLS])
 				floor2[j][i] = 'X';
 			}
 			else {
-				floor2[j][i] = floor[j][i];
+				floor2[j][i] = (floor[j][i] + 64);
 			}
 		}
 	}
@@ -84,33 +80,10 @@ void PrintFloor(int floor[NUM_ROWS][NUM_COLS])
 	for (i = 0; i < NUM_COLS; i++) {
 		for (j = 0; j < NUM_ROWS; j++) {
 			printf("%c", floor2[i][j]);
-
 		}
 		printf("\n");
 	}
-
-}
-
-//Calculates floor area availabe
-double FloorAreaAvailable(int floor[NUM_ROWS][NUM_COLS], double length, double width)
-{
-	double free = 0;
-	int i, j;
-
-	//calculates the area of each grid cell
-	double cellArea = length * width;
-
-	//Nested for loop works through array elements
-	//If cell is empty, cell area is added to total free area
-	for (i = 0; i < NUM_COLS; i++) {
-		for (j = 0; j < NUM_ROWS; j++) {
-			if (floor[i][j] == 0) {
-				free += cellArea;
-			}
-
-		}
-	}
-	return free;
+	
 }
 
 void AddContainer(int floor[NUM_ROWS][NUM_COLS], int position, int size, int direction)
@@ -147,14 +120,14 @@ void AddContainer(int floor[NUM_ROWS][NUM_COLS], int position, int size, int dir
 		//If there's no collision, container is added
 		if (!collision)
 		{
-			for (i = ColPos; i < (ColPos + size); i++) {
+			for (i = ColPos; i < (ColPos + size); i++){
 				if (i < 8) {
-					floor[RowPos][i] = MaxNum + 65;
+					floor[RowPos][i] = MaxNum + 1;
 				}
 			}
 		}
 	}
-
+	
 	//Proceeds if direction is vertical
 	if (direction) {
 		//Checks for collision
@@ -169,10 +142,32 @@ void AddContainer(int floor[NUM_ROWS][NUM_COLS], int position, int size, int dir
 		{
 			for (i = RowPos; i < (RowPos + size); i++)
 			{
-				floor[i][ColPos] = MaxNum + 65;
+				floor[i][ColPos] = MaxNum + 1;
 			}
 		}
 	}
+}
+
+//Calculates floor area availabe
+double FloorAreaAvailable(int floor[NUM_ROWS][NUM_COLS], double length, double width)
+{
+	double free = 0;
+	int i, j;
+
+	//calculates the area of each grid cell
+	double cellArea = length * width;
+
+	//Nested for loop works through array elements
+	//If cell is empty, cell area is added to total free area
+	for (i = 0; i < NUM_COLS; i++) {
+		for (j = 0; j < NUM_ROWS; j++) {
+			if (floor[i][j] == 0) {
+				free += cellArea;
+			}
+
+		}
+	}
+	return free;
 }
 
 int LocateContainer(int floor[NUM_ROWS][NUM_COLS], char move, int* rowStart, int* colStart, int* rowEnd, int* colEnd)
@@ -346,13 +341,6 @@ int MoveContainer(int floor[NUM_ROWS][NUM_COLS], int r0, int c0, int r1, int c1,
 	return 0;
 }
 
-
-/***********************************************************/
-/***********************************************************/
-/********* DO NOT MODIFY ANY CODE BELOW THIS POINT *********/
-/***********************************************************/
-/***********************************************************/
-
 /* Function to obtain capital letter as input */
 char GetMove(void)
 {
@@ -382,16 +370,15 @@ int main(void)
 
 	/* Initialise the yard floor grid and add containers */
 	InitialiseFloor(floor, 'R', 3);
-	AddContainer(floor, 28, 2, 0);
-	AddContainer(floor, 11, 3, 1);
-	AddContainer(floor, 41, 2, 1);
+	AddContainer(floor, 27, 2, 0);
+	AddContainer(floor, 9, 2, 0);
+	AddContainer(floor, 17, 3, 0);
+	AddContainer(floor, 26, 2, 1);
 	AddContainer(floor, 42, 2, 1);
-	AddContainer(floor, 42, 2, 1);
-	AddContainer(floor, 34, 2, 0);
-	AddContainer(floor, 36, 3, 1);
-	AddContainer(floor, 37, 2, 1);
-	AddContainer(floor, 53, 2, 0);
-	AddContainer(floor, 30, 3, 1);
+	AddContainer(floor, 36, 2, 1);
+	AddContainer(floor, 51, 3, 0);
+	AddContainer(floor, 13, 3, 1);
+	AddContainer(floor, 22, 2, 1);
 
 	/* Print status */
 	printf("ENGGEN131 2021 - C Project\nContainer Yard!  The containers are rushing in!\n");
@@ -408,6 +395,9 @@ int main(void)
 	/* A container is ready to exit - the simulation is over */
 	PrintFloor(floor);
 	printf("\nCongratulations, you've succeeded!");
+	printf("\n");
+	printf("\nPress any key to exit");
+	getch();
 
 	return 0;
 }
